@@ -1,0 +1,5 @@
+NAME_OF_PI = ""
+
+MAX_TEMP = 50.0
+
+MIN_TEMP = 22.0
