@@ -14,6 +14,9 @@ class MonitorTemperature:
 
     @classmethod
     def measure_temp(cls):
+        """
+        This method measures the temperature of the Raspberry Pi's CPU and emails the developers if they are too hot or too cold.
+        """
         temp = os.popen("vcgencmd measure_temp").readline()
         temp = float(temp[5:-3])
         if temp >= MAX_TEMP:
@@ -23,6 +26,16 @@ class MonitorTemperature:
 
     @classmethod
     def email_send(cls, temp, too_hot=False, too_cold=False):
+        """
+        This method sends an email to the developers with the temperature measured by the measure_temp function.
+        :param temp:
+        :type temp: float
+        :param too_hot:
+        :type too_hot: bool
+        :param too_cold:
+        :type too_cold: bool
+        :return:
+        """
         msg = MIMEMultipart()
         sender_email = "maskdetector101@gmail.com"
         receiver_email = "adityaanand.muz@gmail.com, srinivassriram06@gmail.com, raja.muz@gmail.com, abhisar.muz@gmail.com"
