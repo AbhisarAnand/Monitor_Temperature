@@ -42,7 +42,7 @@ class MonitorTemperature:
         """
         content = {current_time: str(temp)}
         Path(FILE_NAME).touch(exist_ok=True)
-        with open(FILE_NAME, "w") as file:
+        with open(FILE_NAME, "a") as file:
             json.dump(content, file, indent=4)
 
 
