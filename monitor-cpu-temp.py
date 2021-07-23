@@ -11,6 +11,7 @@ import smtplib
 import ssl
 import json
 import time
+import datetime
 
 from constants import *
 
@@ -101,7 +102,7 @@ class MonitorTemperature:
         This method sends an email to the developers with the temperature measured by the measure_temp function when the time is 10:00 PM EST.
         :return:
         """
-        if time.strftime("%H:%M") == TIME_DAILY_UPDATE:
+        if TIME_DAILY_UPDATE_LOW_THRESHOLD < datetime.datetime.now() < TIME_DAILY_UPDATE_HIGH_THRESHOLD:
             cls.email_send(temp=None, too_hot=False,
                            too_cold=False, daily_update=True)
 
