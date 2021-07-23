@@ -61,10 +61,10 @@ class MonitorTemperature:
         """
         msg = MIMEMultipart()
         sender_email = "maskdetector101@gmail.com"
-        receiver_email = "adityaanand.muz@gmail.com, srinivassriram06@gmail.com, raja.muz@gmail.com, abhisar.muz@gmail.com"
-        password = keyring.get_password("gmail", "maskdetector101.gmail.com")
-        msg['From'] = 'maskdetector101@gmail.com'
-        msg['To'] = "adityaanand.muz@gmail.com, srinivassriram06@gmail.com, raja.muz@gmail.com, abhisar.muz@gmail.com"
+        receiver_email = "adityaanand.muz@gmail.com, srinivassriram06@gmail.com, raja.muz@gmail.com, abhisar.muz@gmail.com, ssriram.78@gmail.com"
+        password = ''
+        msg['From'] = sender_email
+        msg['To'] = receiver_email
         msg['Date'] = formatdate(localtime=True)
         if daily_update:
             msg['Subject'] = "Daily update: Here is the update for the temperature of the PI on {}".format(
