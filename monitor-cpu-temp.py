@@ -99,7 +99,6 @@ class MonitorTemperature:
         except Exception as e:
             print(type(e).__name__ + ': ' + str(e))
 
-    @classmethod
     def send_update_email(self) -> None:
         """
         This method sends an email to the developers with the temperature measured by the measure_temp function when the time is 10:00 PM EST.
