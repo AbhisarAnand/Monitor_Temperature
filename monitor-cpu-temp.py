@@ -70,10 +70,11 @@ class MonitorTemperature:
         msg['To'] = receiver_email
         msg['Date'] = formatdate(localtime=True)
         if daily_update:
-            msg['Subject'] = "Daily update: Here is the update for the temperature of the PI on {}".format(
-                formatdate(localtime=True))
+            msg['Subject'] = "Daily Temperature Update on {} for {}".format(
+                formatdate(localtime=True), self.pi_name)
+            body = "Here is the update for the temperature of the PI."
             part = MIMEBase('application', "octet-stream")
-            part.set_payload(open(FILE_NAME).load())
+            part.set_payload(open(FILE_NAME).read())
             encoders.encode_base64(part)
             part.add_header('Content-Disposition',
                             'attachment', filename=FILE_NAME)
