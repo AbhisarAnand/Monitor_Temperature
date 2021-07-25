@@ -18,23 +18,28 @@ from constants import *
 
 class MonitorTemperature:
 
-    @classmethod
-    def measure_temp(cls) -> None:
-        """
-        This method measures the temperature of the Raspberry Pi's CPU and emails the developers if they are too hot or too cold.
-        """
-        temp = os.popen("vcgencmd measure_temp").readline()
-        temp = float(temp[5:-3])
-        current_time = str(time.strftime("%Y-%m-%d %H:%M:%S"))
-        cls.write_temp_to_file(temp, current_time)
-        cls.send_update_email()
-        if temp >= MAX_TEMP:
-            cls.email_send(temp=temp, too_hot=True, too_cold=False)
-        if temp <= MIN_TEMP:
-            cls.email_send(temp=temp, too_hot=False, too_cold=True)
+    def __init__(self):
+        self.temperature = self.get_temperature()
+        self.maximum_temperature = MAX_TEMP
+        self.minimum_temperature = MIN_TEMP
+        self.temperatre_file = FILE_NAME
+        self.sender_email = SENDING_EMAIL_ADDRESS
+        self.receiver_email = EMAIL_LIST
+        self.password = PASSWORD
+        self.pi_name = NAME_OF_PI
+        self.daily_update_low = TIME_DAILY_UPDATE_LOW_THRESHOLD
+        self.daily_update_high = TIME_DAILY_UPDATE_HIGH_THRESHOLD
 
-    @classmethod
-    def write_temp_to_file(cls, temp: float, current_time) -> None:
+    def get_temperature(self) -> float:
+        """This method gets and returns the temperature of the Raspberry Pi's CPU.
+
+        Returns:
+            float: The current temperature of the system.
+        """
+        self.temperature = float(os.popen("vcgencmd measure_temp").readline()[5:-3])
+        return self.temperature           
+
+    def write_temp_to_file(self, temp: float, current_time) -> None:
         """This method writes the current time and temperature to a file.
 
         Args:
@@ -42,13 +47,11 @@ class MonitorTemperature:
             current_time (str): The current time of the system.
         """
         content = {current_time: str(temp)}
-        Path(FILE_NAME).touch(exist_ok=True)
-        with open(FILE_NAME, "a") as file:
+        Path(self.temperatre_file).touch(exist_ok=True)
+        with open(self.temperatre_file, "a") as file:
             json.dump(content, file, indent=4)
 
-
-    @classmethod
-    def email_send(cls, temp, too_hot=False, too_cold=False, daily_update=False) -> None:
+    def email_send(self, temp, too_hot=False, too_cold=False, daily_update=False) -> None:
         """
         This method sends an email to the developers with the temperature measured by the measure_temp function.
         :param temp:
@@ -60,9 +63,9 @@ class MonitorTemperature:
         :return:
         """
         msg = MIMEMultipart()
-        sender_email = "maskdetector101@gmail.com"
-        receiver_email = "adityaanand.muz@gmail.com, srinivassriram06@gmail.com, raja.muz@gmail.com, abhisar.muz@gmail.com, ssriram.78@gmail.com"
-        password = ''
+        sender_email = self.sender_email
+        receiver_email = self.receiver_email
+        password = self.password
         msg['From'] = sender_email
         msg['To'] = receiver_email
         msg['Date'] = formatdate(localtime=True)
@@ -78,14 +81,14 @@ class MonitorTemperature:
         else:
             if too_hot:
                 msg['Subject'] = 'HOT Temperature Warning Raspberry Pi - {}'.format(
-                    NAME_OF_PI)
+                    self.pi_name)
                 body = "{} Raspberry Pi is getting hot.\nThe temperature was {}".format(
-                    NAME_OF_PI, temp)
+                    self.pi_name, temp)
             if too_cold:
                 msg['Subject'] = 'COLD Temperature Warning Raspberry Pi - {}'.format(
-                    NAME_OF_PI)
+                    self.pi_name)
                 body = "{} Raspberry Pi is getting cold.\nThe temperature was {}".format(
-                    NAME_OF_PI, temp)
+                    self.pi_name, temp)
         msg.attach(MIMEText(body, "plain"))
         context = ssl.create_default_context()
         try:
@@ -97,15 +100,28 @@ class MonitorTemperature:
             print(type(e).__name__ + ': ' + str(e))
 
     @classmethod
-    def send_update_email(cls) -> None:
+    def send_update_email(self) -> None:
         """
         This method sends an email to the developers with the temperature measured by the measure_temp function when the time is 10:00 PM EST.
         :return:
         """
-        if TIME_DAILY_UPDATE_LOW_THRESHOLD < datetime.datetime.now() < TIME_DAILY_UPDATE_HIGH_THRESHOLD:
-            cls.email_send(temp=None, too_hot=False,
+        if self.daily_update_low < datetime.datetime.now() < self.daily_update_high:
+            self.email_send(temp=None, too_hot=False,
                            too_cold=False, daily_update=True)
+    
+    def main(self) -> None:
+        """
+        This method measures the temperature of the Raspberry Pi's CPU and emails the developers if they are too hot or too cold.
+        """
+        current_time = str(time.strftime("%Y-%m-%d %H:%M:%S"))
+        self.write_temp_to_file(self.temperature, current_time)
+        self.send_update_email()
+        if self.temperature >= self.maximum_temperature:
+            self.email_send(temp=self.temperature, too_hot=True, too_cold=False)
+        if self.temperature <= self.minimum_temperature:
+            self.email_send(temp=self.temperature, too_hot=False, too_cold=True)
 
 
 if __name__ == '__main__':
-    MonitorTemperature.measure_temp()
+    monitor_temperature_inst = MonitorTemperature()
+    monitor_temperature_inst.main()

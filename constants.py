@@ -10,5 +10,9 @@ MIN_TEMP = 22.0
 
 FILE_NAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temperature.json")
 
-TIME_DAILY_UPDATE_LOW_THRESHOLD = datetime.datetime.now().replace(hour=9, minute=59, second=0, microsecond=0)
+TIME_DAILY_UPDATE_LOW_THRESHOLD = datetime.datetime.now().replace(hour=21, minute=59, second=0, microsecond=0)
 TIME_DAILY_UPDATE_HIGH_THRESHOLD = datetime.datetime.now().replace(hour=22, minute=3, second=0, microsecond=0)
+
+EMAIL_LIST = "adityaanand.muz@gmail.com, srinivassriram06@gmail.com, raja.muz@gmail.com, abhisar.muz@gmail.com, ssriram.78@gmail.com"
+SENDING_EMAIL_ADDRESS = "maskdetector101@gmail.com"
+PASSWORD = ""
