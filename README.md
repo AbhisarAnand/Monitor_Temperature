@@ -3,3 +3,6 @@ Measures the temperature of the Raspberry Pi and records it in a JSON File. It s
 
 ## Getting Started
 Coming Soon!
+
+## Documentation
+Coming Soon!
