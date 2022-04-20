@@ -62,6 +62,7 @@ class MonitorTemperature:
         :type too_cold: bool
         :return:
         """
+        global body
         msg = MIMEMultipart()
         sender_email = self.sender_email
         receiver_email = self.receiver_email

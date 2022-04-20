@@ -16,3 +16,7 @@ TIME_DAILY_UPDATE_HIGH_THRESHOLD = datetime.datetime.now().replace(hour=0, minut
 EMAIL_LIST = "adityaanand.muz@gmail.com, srinivassriram06@gmail.com, raja.muz@gmail.com, abhisar.muz@gmail.com, ssriram.78@gmail.com"
 SENDING_EMAIL_ADDRESS = "maskdetector101@gmail.com"
 PASSWORD = ""
+
+IN1_PIN = 24
+IN2_PIN = 23
+ENA_PIN = 25
